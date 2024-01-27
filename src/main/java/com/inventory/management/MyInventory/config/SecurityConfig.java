@@ -1,5 +1,6 @@
 package com.inventory.management.MyInventory.config;
 
+import com.inventory.management.MyInventory.utils.LoadUserInfo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,9 +29,10 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder)
     {
-        UserDetails admin= User.withUsername("abhishek").password(encoder.encode("khoya")).roles("ADMIN").build();
-        UserDetails user=User.withUsername("pratik").password(encoder.encode("khoya")).roles("USER").build();
-        return new InMemoryUserDetailsManager(admin,user);
+//        UserDetails admin= User.withUsername("abhishek").password(encoder.encode("khoya")).roles("ADMIN").build();
+//        UserDetails user=User.withUsername("pratik").password(encoder.encode("khoya")).roles("USER").build();
+//        return new InMemoryUserDetailsManager(admin,user);
+        return new LoadUserInfo();
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
