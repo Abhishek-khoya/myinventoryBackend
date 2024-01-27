@@ -7,6 +7,7 @@ import com.inventory.management.MyInventory.repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +24,13 @@ public class SaleController {
     private ProductRepository productRepository;
     @Autowired
     private SaleRepository saleRepository;
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/sales")
     public Iterable<Sale> getAllSales()
     {
         return saleRepository.findAll();
     }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/sales")
     public ResponseEntity<Sale> addSale(@RequestBody Sale sale)
     {

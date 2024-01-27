@@ -6,6 +6,7 @@ import com.inventory.management.MyInventory.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,16 +16,19 @@ import java.util.Optional;
 
 @RestController
 public class ProductController {
+
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private PhotosRepository photosRepository;
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/products")
     public Iterable<Product> getAllProduct()
     {
         return productRepository.findAll();
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/products")
     public ResponseEntity<Product> addProduct(@RequestParam String productName, @RequestParam BigDecimal price,@RequestParam int quantity,@RequestParam String description,@RequestParam int categoryId, @RequestParam("photo")MultipartFile photo)
@@ -51,6 +55,7 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable long id)
@@ -65,6 +70,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/products/{id}")
     //public ResponseEntity<Product> updateProduct(@PathVariable long id,@RequestParam String productName, @RequestParam BigDecimal price,@RequestParam int quantity,@RequestParam String description,@RequestParam int categoryId, @RequestParam("photo")MultipartFile photo)
@@ -87,6 +93,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("products/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable long id)
@@ -103,6 +110,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/products/photos/{id}")
     public ResponseEntity<Photos> getProductPhotoByProductId(@PathVariable long id)
